@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Colônia de Formigas — rota de entregas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topo">
+    <div>
+      <h1>Colônia de Formigas — rota de entregas</h1>
+      <p>Simulador do Ant System: a rota sai do depósito, visita cada ponto uma única vez e volta.</p>
+    </div>
+    <!-- Trocar o href pelo link do repositório no GitHub -->
+    <a id="link-repo" class="link-repo" href="#" target="_blank" rel="noopener">Repositório no GitHub</a>
+  </header>
+
+  <main class="layout">
+    <!-- ======================= CONFIGURAÇÃO ======================= -->
+    <section class="painel config" aria-labelledby="t-config">
+      <h2 id="t-config">Configuração</h2>
+
+      <div class="presets">
+        <span>Exemplos:</span>
+        <button type="button" class="sec" id="btn-preset-ref">Instância 6.1 (4 vértices)</button>
+        <button type="button" class="sec" id="btn-preset-8">8 vértices</button>
+      </div>
+
+      <h3>Vértices <small>(4 a 12; x e y de 0 a 1000, até 2 casas)</small></h3>
+      <table class="tab-vertices" id="tab-vertices">
+        <thead>
+          <tr><th title="Vértice de partida e chegada">Depósito</th><th>Id</th><th>x</th><th>y</th><th><span class="sr">Remover</span></th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <button type="button" class="sec" id="btn-add">+ Adicionar vértice</button>
+
+      <h3>Parâmetros</h3>
+      <div class="grade-param">
+        <label>Formigas <small>1 a 100</small>
+          <input type="text" inputmode="numeric" id="p-ants" data-key="ants" autocomplete="off"></label>
+        <label>Iterações <small>1 a 200</small>
+          <input type="text" inputmode="numeric" id="p-iterations" data-key="iterations" autocomplete="off"></label>
+        <label>α (feromônio) <small>0 a 5</small>
+          <input type="text" inputmode="decimal" id="p-alpha" data-key="alpha" autocomplete="off"></label>
+        <label>β (distância) <small>0 a 5</small>
+          <input type="text" inputmode="decimal" id="p-beta" data-key="beta" autocomplete="off"></label>
+        <label>ρ (evaporação, %) <small>0 a 90</small>
+          <input type="text" inputmode="decimal" id="p-rho" data-key="rho" autocomplete="off"></label>
+        <label>τ₀ (feromônio inicial) <small>0,01 a 100</small>
+          <input type="text" inputmode="decimal" id="p-tau0" data-key="tau0" autocomplete="off"></label>
+        <label>Q (depósito) <small>0,01 a 10.000</small>
+          <input type="text" inputmode="decimal" id="p-Q" data-key="Q" autocomplete="off"></label>
+        <label>Semente <small>inteiro</small>
+          <input type="text" inputmode="numeric" id="p-seed" data-key="seed" autocomplete="off"></label>
+      </div>
+
+      <div id="erros" class="erros" role="alert" hidden></div>
+    </section>
+
+    <!-- ======================= SIMULAÇÃO ======================= -->
+    <section class="painel principal" aria-labelledby="t-sim">
+      <h2 id="t-sim">Simulação</h2>
+
+      <div class="controles">
+        <button type="button" id="btn-run">▶ Executar</button>
+        <button type="button" id="btn-pause">⏸ Pausar</button>
+        <button type="button" id="btn-step">⏭ Avançar uma iteração</button>
+        <button type="button" class="sec" id="btn-reset">↺ Reiniciar</button>
+        <label class="vel">Intervalo entre iterações
+          <input type="range" id="sl-speed" min="0" max="1500" step="50" value="400">
+          <output id="out-speed">400 ms</output>
+        </label>
+      </div>
+
+      <p id="aviso-pendente" class="aviso aviso-pend" hidden>
+        Os campos foram alterados. Clique em <strong>Reiniciar</strong> para aplicar as mudanças e liberar a execução.
+      </p>
+      <p id="status" class="status" aria-live="polite"></p>
+
+      <div class="metricas">
+        <div class="card"><span class="rot">Iteração</span><strong id="m-iter">0 / 0</strong></div>
+        <div class="card"><span class="rot">Menor da iteração</span><strong id="m-best">ainda não calculada</strong></div>
+        <div class="card"><span class="rot">Média das formigas</span><strong id="m-mean">ainda não calculada</strong></div>
+        <div class="card"><span class="rot">Melhor acumulada</span><strong id="m-acc">ainda não calculada</strong></div>
+      </div>
+      <p class="rota-melhor">Melhor rota acumulada: <strong id="m-route">ainda não calculada</strong></p>
+
+      <div class="visor">
+        <label for="sl-view">Iteração exibida: <strong id="out-view">0</strong></label>
+        <input type="range" id="sl-view" min="0" max="0" step="1" value="0">
+      </div>
+
+      <p id="aviso-escala" class="aviso aviso-escala" hidden></p>
+
+      <div class="grafo-wrap">
+        <svg id="grafo" viewBox="0 0 640 640" role="img" aria-label="Grafo com os vértices e o feromônio de cada aresta"></svg>
+        <div class="lateral">
+          <label class="chk"><input type="checkbox" id="chk-labels" checked> Mostrar valores de τ nas arestas</label>
+          <div id="info" class="info">Passe o mouse ou clique em uma aresta ou vértice para ver distância e feromônio.</div>
+          <div class="legenda" aria-label="Legenda">
+            <h3>Legenda</h3>
+            <div class="leg-item"><svg width="60" height="14"><line x1="2" y1="7" x2="58" y2="7" stroke="#9db8d6" stroke-width="1.5" stroke-linecap="round"/></svg>
+              pouco feromônio (τ mín = <span id="lg-min">–</span>)</div>
+            <div class="leg-item"><svg width="60" height="14"><line x1="2" y1="7" x2="58" y2="7" stroke="#1b4f8f" stroke-width="6" stroke-linecap="round"/></svg>
+              muito feromônio (τ máx = <span id="lg-max">–</span>)</div>
+            <div class="leg-item"><svg width="60" height="14"><line x1="2" y1="7" x2="58" y2="7" stroke="#e8590c" stroke-width="3" stroke-linecap="round"/><polygon points="32,2 42,7 32,12" fill="#e8590c"/></svg>
+              melhor rota acumulada (setas mostram o sentido)</div>
+            <div class="leg-item"><svg width="60" height="24"><circle cx="30" cy="12" r="10" fill="#1f2933" stroke="#e8590c" stroke-width="3"/></svg> depósito</div>
+            <div class="leg-item"><svg width="60" height="24"><circle cx="30" cy="12" r="10" fill="#fff" stroke="#1f2933" stroke-width="2"/></svg> ponto de entrega</div>
+            <p class="nota">Espessura e cor das arestas são proporcionais a τ em relação ao maior valor da iteração exibida.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================= HISTÓRICO ======================= -->
+  <section class="painel largo" aria-labelledby="t-hist">
+    <h2 id="t-hist">Histórico</h2>
+    <div class="hist-grid">
+      <div>
+        <svg id="grafico" viewBox="0 0 640 280" role="img" aria-label="Gráfico do comprimento por iteração"></svg>
+      </div>
+      <div class="tab-scroll">
+        <table class="tab" id="tab-hist">
+          <thead><tr><th>Iteração</th><th>Menor da iteração</th><th>Média</th><th>Melhor acumulada</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <p class="nota">Clique em uma linha da tabela para exibir aquela iteração no grafo e nos detalhes.</p>
+  </section>
+
+  <!-- ======================= TRANSPARÊNCIA ======================= -->
+  <section class="painel largo" aria-labelledby="t-det">
+    <h2 id="t-det">Detalhes da iteração exibida</h2>
+    <div id="detalhes"></div>
+  </section>
+
+  <footer class="rodape">
+    Colônia de Formigas — HTML, CSS e JavaScript puros. Todo o cálculo e todo sorteio ficam em <code>aco.js</code>; a interface só exibe os resultados.
+  </footer>
+
+  <script src="aco.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
