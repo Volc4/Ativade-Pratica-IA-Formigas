@@ -852,7 +852,7 @@
     });
     $('chk-labels').addEventListener('change', () => { if (state.engine) desenharGrafo(); });
 
-    carregarFormulario(PRESETS.ref);
+    carregarFormulario(PRESETS.oito); // o enunciado pede um cenário inicial de 5 a 12 vértices
     reiniciar();
   }
 

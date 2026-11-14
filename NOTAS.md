@@ -4,33 +4,30 @@ Arquivo de continuidade entre sessões. Ao final de cada sessão, atualizar
 "Últimas mudanças" e "Próximos passos".
 
 ## Divisão (ver DIVISAO-ACO.md, o contrato combinado)
-- Pessoa 1 — Núcleo: `aco.js`, `test.js` → **feito**.
-- Pessoa 2 — Interface: `index.html`, `style.css`, `app.js` → pendente.
+- Pessoa 1 — Núcleo: `aco.js`, `test.js` → feito.
+- Pessoa 2 — Interface: `index.html`, `style.css`, `app.js` → feito.
 
-## Estado do núcleo (14/11/2026)
-- `aco.js` segue o contrato da seção 2 e expõe também `validateConfig`,
-  `PISO_FEROMONIO` e `LIMITES` (são extras e não quebram o contrato).
-- `test.js`: 6 de 6 casos aprovados (6.1 a 6.5). Os resultados estão no README.
-- O Node não está instalado. Para rodar os testes, usar o Node embutido no VS Code:
-  ```powershell
-  $env:ELECTRON_RUN_AS_NODE=1; & "$env:LOCALAPPDATA\Programs\Microsoft VS Code\Code.exe" test.js
-  ```
-  (se a saída vier cortada, redirecionar para um arquivo)
+## Estado (14/11/2026)
+- Publicado: https://volc4.github.io/Ativade-Pratica-IA-Formigas/
+- `test.js`: 6 de 6 casos aprovados (6.1 a 6.5).
+- Interface testada no Edge: entradas inválidas bloqueiam a execução com
+  mensagens claras; Reiniciar reproduz o histórico; nenhum erro de JavaScript.
+- README completo: autores, links, instruções, parâmetros, bibliotecas
+  (nenhuma) e resultados dos testes do núcleo e da interface.
 
 ## Decisões
 - Gerador: Mulberry32, criado por engine a partir da semente.
-- A roleta consome um sorteio mesmo quando há um só candidato (mantém a
-  sequência simples e determinística).
-- Se todos os pesos ficarem nulos ou infinitos (não ocorre dentro dos limites),
-  o sorteio vira uniforme.
+- A roleta consome um sorteio mesmo quando há um só candidato.
 - Melhor da iteração: em caso de empate, fica a primeira formiga. A melhor
   acumulada só troca por uma rota estritamente menor.
-
-## Pendências
-- README: nomes dos autores, links (Pages e repositório), partes da interface.
+- A página abre com o exemplo de 8 vértices (o enunciado pede 5 a 12 no
+  cenário inicial); a instância 6.1 fica no botão de exemplo.
+- Espessura e cor das arestas são relativas ao maior τ da iteração exibida;
+  quando a escala muda, a página mostra um aviso com os novos limites.
 
 ## Últimas mudanças
-- 14/11/2026: núcleo e testes implementados; README com a parte do núcleo.
+- 14/11/2026: link do repositório na página, cenário inicial com 8 vértices,
+  README completado, contrato (DIVISAO-ACO.md) adicionado ao repositório.
 
 ## Próximos passos
-- Interface (Pessoa 2) e integração (seção 4 do contrato).
+- Entregar o link do GitHub Pages.

@@ -2,17 +2,36 @@
 
 Simulador do **Ant System** para encontrar uma rota que sai do depósito, visita cada ponto de entrega uma única vez e volta ao depósito, com a menor distância total possível. Roda inteiro no navegador com HTML, CSS e JavaScript puro, sem servidor de aplicação.
 
-- Aplicação (GitHub Pages): _(link)_
-- Repositório: _(link)_
+- Aplicação (GitHub Pages): https://volc4.github.io/Ativade-Pratica-IA-Formigas/
+- Repositório: https://github.com/Volc4/Ativade-Pratica-IA-Formigas
 
 ## Autores
 
-- _Luidge De Sousa Carvalho_
-- _Samuel Lucas Alves Matos_
+- Luidge De Sousa Carvalho
+- Samuel Lucas Alves Matos
 
 ## Instruções de uso
 
-_(Parte da interface: como abrir a página, editar os vértices, escolher o depósito, preencher os parâmetros e usar Executar, Pausar, Avançar e Reiniciar.)_
+**Abrir.** Acesse o link do GitHub Pages; não há login nem instalação. Para rodar localmente, basta abrir o `index.html` no navegador: os scripts são carregados de forma clássica, sem módulos, então não é preciso servidor. Os testes do núcleo rodam com `node test.js`.
+
+**Configurar.**
+1. A página abre com um cenário de 8 vértices. Os botões **Instância 6.1 (4 vértices)** e **8 vértices** carregam os exemplos prontos.
+2. Na tabela de vértices, edite o identificador e as coordenadas x e y. **+ Adicionar vértice** cria uma linha (até 12) e **✕** remove uma (mínimo de 4).
+3. Marque na primeira coluna qual vértice é o **depósito**.
+4. Preencha os parâmetros. ρ é digitado em porcentagem. Vírgula e ponto são aceitos como separador decimal.
+5. Campos inválidos ficam destacados em vermelho e a lista de erros aparece abaixo dos parâmetros. Enquanto houver erro, a execução fica bloqueada.
+
+**Executar.**
+- **Reiniciar** cria a simulação com os campos atuais: limpa o histórico, volta todas as arestas para τ₀ e restabelece a semente. Qualquer alteração nos campos exige clicar em Reiniciar.
+- **Executar** roda as iterações em sequência; **Pausar** interrompe preservando o estado; **Executar** de novo retoma de onde parou.
+- **Avançar uma iteração** executa exatamente uma iteração e continua pausado.
+- O controle **Intervalo entre iterações** só muda a velocidade da exibição: todos os sorteios ficam no núcleo, então o resultado é o mesmo em qualquer velocidade.
+
+**Acompanhar.**
+- Os cartões mostram a iteração atual, o menor comprimento da iteração, a média das formigas e a melhor distância acumulada. Na iteração 0, aparecem como "ainda não calculada".
+- No grafo, a espessura e a cor de cada aresta acompanham o feromônio. O valor numérico de τ aparece sobre a aresta, e a melhor rota acumulada fica em laranja, com setas indicando o sentido. Passe o mouse ou clique em uma aresta para ver a distância, o feromônio e a atualização da iteração (antes, após evaporação, depósito). Quando a escala visual muda entre iterações, um aviso informa os novos limites.
+- O controle **Iteração exibida** e as linhas da tabela do histórico permitem voltar a qualquer iteração já concluída.
+- Em **Detalhes da iteração exibida**, os painéis expansíveis mostram, para cada formiga, cada passo: vértice atual, candidatos com τ, d, w e p, vértice escolhido, retorno ao depósito e comprimento. Mostram também, para cada aresta, o feromônio anterior, após evaporação, o depósito total e o final.
 
 ## Parâmetros
 
@@ -31,8 +50,10 @@ _(Parte da interface: como abrir a página, editar os vértices, escolher o dep�
 
 ## Bibliotecas auxiliares
 
-O núcleo não usa nenhuma biblioteca. O gerador pseudoaleatório com semente (Mulberry32) foi escrito no próprio `aco.js`.
-_(A interface lista aqui as que usar, se houver, e a finalidade de cada uma.)_
+Nenhuma. O núcleo e a interface usam apenas HTML, CSS e JavaScript do próprio navegador.
+- O gerador pseudoaleatório com semente (Mulberry32) foi escrito no próprio `aco.js`.
+- O grafo e o gráfico do histórico são desenhados em SVG diretamente pelo `app.js`.
+- A página não carrega nenhum arquivo externo (CDN).
 
 ## Descrição da solução (núcleo)
 
@@ -187,4 +208,36 @@ Parâmetros: os mesmos da 6.4, variando β e a semente.
 | Campo vazio (NaN) ou ausente | mensagem com o intervalo permitido do campo. |
 | Semente 1,5 | A semente aleatória deve ser um número inteiro. |
 
-_(A interface registra aqui o teste manual das mesmas entradas na tela.)_
+### 6.5 Entradas inválidas (interface)
+
+O teste partiu da instância 6.1, com uma entrada inválida por vez, seguida de um clique em **Reiniciar**. Foi feito no Microsoft Edge (preenchendo os campos por script, como um usuário faria). Em todos os casos a mensagem abaixo apareceu na caixa de erros, o campo ficou destacado e os botões **Executar** e **Avançar** ficaram desabilitados.
+
+| Entrada | Mensagem exibida |
+|---|---|
+| D com as mesmas coordenadas de C (3, 4) | Coordenadas repetidas (3, 4) nos vértices "C" e "D". |
+| Identificador de D trocado para "A" | Identificador repetido: "A". |
+| Identificador vazio | Vértice 4: o identificador não pode ficar vazio. |
+| x de B vazio | Vértice "B": x está vazio. |
+| x de B = 1001 | Vértice "B": x deve estar entre 0 e 1000. |
+| y de D = 4,123 | Vértice "D": y deve ter no máximo duas casas decimais. |
+| y de B = "abc" | Vértice "B": y deve ser um número. |
+| Formigas vazio | Formigas: o campo está vazio. |
+| Formigas = 0 | Formigas: o valor deve estar entre 1 e 100. |
+| Formigas = 2,5 | Formigas: digite um número inteiro (1 e 100). |
+| Iterações = 201 | Iterações: o valor deve estar entre 1 e 200. |
+| α = 6 | α: o valor deve estar entre 0 e 5. |
+| β = −1 | β: o valor deve estar entre 0 e 5. |
+| ρ = 95% | ρ (%): o valor deve estar entre 0 e 90. |
+| τ₀ = 0 | τ₀: o valor deve estar entre 0,01 e 100. |
+| Q = 10.001 | Q: o valor deve estar entre 0,01 e 10.000. |
+| Semente = 1,5 | Semente: digite um número inteiro. |
+
+- **Menos de quatro vértices:** com 4 vértices, todos os botões de remover ficam desabilitados, então não é possível ficar com menos de 4.
+- **Vértice novo sem coordenadas:** um vértice adicionado entra com x e y vazios e bloqueia a execução ("Vértice "E": x está vazio.") até ser preenchido.
+- **Outros comportamentos verificados na interface:**
+  - a página abre com 8 vértices, na iteração 0, com "ainda não calculada";
+  - na instância 6.1, 30 cliques em Avançar produziram 30 linhas no histórico (mais a iteração 0) e a rota A → B → C → D → A = 14;
+  - Reiniciar e repetir as 30 iterações reproduziu a tabela idêntica;
+  - com ρ = 0%, a coluna "Após evaporação" ficou igual à coluna "Antes" em todas as arestas.
+
+**Conclusão:** entradas inválidas impedem a execução e geram mensagens claras.
