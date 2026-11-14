@@ -7,8 +7,8 @@ Simulador do **Ant System** para encontrar uma rota que sai do depósito, visita
 
 ## Autores
 
-- _(nome)_ — núcleo do algoritmo (`aco.js`, `test.js`)
-- _(nome)_ — interface (`index.html`, `style.css`, `app.js`)
+- _Luidge De Sousa Carvalho_
+- _Samuel Lucas Alves Matos_
 
 ## Instruções de uso
 
