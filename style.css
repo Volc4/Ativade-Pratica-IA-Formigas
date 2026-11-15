@@ -146,3 +146,6 @@ details details > summary { font-weight: 500; font-size: .9rem; }
 
 .rodape { text-align: center; color: var(--suave); font-size: .85rem; padding: 18px 20px 28px; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* evita quebrar números em notação científica (ex.: 6,009e-4) na legenda */
+#lg-min, #lg-max { white-space: nowrap; }
