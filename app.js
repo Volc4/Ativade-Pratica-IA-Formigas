@@ -237,10 +237,14 @@
 
     const cfg = { vertices, depot: form.depot };
 
-    function numero(chave, rotulo, min, max, faixa, inteiro) {
+    function numero(chave, rotulo, min, max, faixa, inteiro, avisaMilhar) {
       const bruto = $(`p-${chave}`).value.trim();
       if (bruto === '') {
         erro(chave, `${rotulo}: o campo está vazio.`);
+        return NaN;
+      }
+      if (avisaMilhar && /^[1-9]\d{0,2}\.\d{3}$/.test(bruto)) {
+        erro(chave, `${rotulo}: ponto seguido de 3 dígitos é ambíguo. Para milhares, digite sem separador (ex.: 10000); para decimais, use vírgula (ex.: 1,5).`);
         return NaN;
       }
       const s = bruto.replace(',', '.');
@@ -263,7 +267,7 @@
     const rhoPct = numero('rho', 'ρ (%)', 0, 90, '0 e 90', false);
     cfg.rho = rhoPct / 100;
     cfg.tau0 = numero('tau0', 'τ₀', 0.01, 100, '0,01 e 100', false);
-    cfg.Q = numero('Q', 'Q', 0.01, 10000, '0,01 e 10.000', false);
+    cfg.Q = numero('Q', 'Q', 0.01, 10000, '0,01 e 10.000', false, true);
 
     const sBruto = $('p-seed').value.trim();
     if (sBruto === '') erro('seed', 'Semente: o campo está vazio.');
@@ -562,8 +566,8 @@
       gV.appendChild(c);
       gV.appendChild(el('text', { x: pos[i].x, y: pos[i].y, class: 'v-label', fill: dep ? '#ffffff' : '#1f2933' }, v.id.length > 4 ? `${v.id.slice(0, 3)}…` : v.id));
     });
+    svg.appendChild(gHit); // áreas de clique das arestas ficam ABAIXO dos vértices
     svg.appendChild(gV);
-    svg.appendChild(gHit);
 
     state.pos = pos;
     desenharSelecao();
@@ -633,7 +637,7 @@
     limpar(svg);
     const W = 640;
     const H = 280;
-    const m = { l: 56, r: 16, t: 28, b: 38 };
+    const m = { l: 56, r: 16, t: 44, b: 38 };
     const hist = eng.history;
     const total = eng.config.iterations;
 
@@ -682,10 +686,10 @@
       if (s.valores.length === 1) svg.appendChild(el('circle', { cx: X(1), cy: Y(s.valores[0]), r: 3, fill: s.cor }));
     });
 
-    let lx = m.l + 140;
+    let lx = m.l;
     series.forEach((s) => {
-      svg.appendChild(el('line', { x1: lx, x2: lx + 18, y1: 12, y2: 12, stroke: s.cor, 'stroke-width': 3 }));
-      svg.appendChild(el('text', { x: lx + 22, y: 16, 'font-size': 11, fill: '#243b53' }, s.nome));
+      svg.appendChild(el('line', { x1: lx, x2: lx + 18, y1: 29, y2: 29, stroke: s.cor, 'stroke-width': 3 }));
+      svg.appendChild(el('text', { x: lx + 22, y: 33, 'font-size': 11, fill: '#243b53' }, s.nome));
       lx += 22 + s.nome.length * 6 + 14;
     });
   }
