@@ -22,12 +22,16 @@ Arquivo de continuidade entre sessões. Ao final de cada sessão, atualizar
   acumulada só troca por uma rota estritamente menor.
 - A página abre com o exemplo de 8 vértices (o enunciado pede 5 a 12 no
   cenário inicial); a instância 6.1 fica no botão de exemplo.
-- Espessura e cor das arestas são relativas ao maior τ da iteração exibida;
-  quando a escala muda, a página mostra um aviso com os novos limites.
+- Espessura e cor das arestas são relativas ao maior τ já alcançado até a
+  iteração exibida (topo que nunca diminui), para que uma aresta que perdeu
+  feromônio nunca pareça ter ganhado. Quando o topo muda, aparece um aviso.
 
 ## Últimas mudanças
 - 14/11/2026: link do repositório na página, cenário inicial com 8 vértices,
   README completado, contrato (DIVISAO-ACO.md) adicionado ao repositório.
+- 14/11/2026: escala visual com topo crescente (regra da seção 5 do PDF);
+  testado no Edge: 875 reduções de τ, nenhuma aresta ficou mais grossa;
+  Executar/Pausar/Retomar reproduz o mesmo histórico que Avançar.
 
 ## Próximos passos
 - Entregar o link do GitHub Pages.

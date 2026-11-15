@@ -29,7 +29,7 @@ Simulador do **Ant System** para encontrar uma rota que sai do depósito, visita
 
 **Acompanhar.**
 - Os cartões mostram a iteração atual, o menor comprimento da iteração, a média das formigas e a melhor distância acumulada. Na iteração 0, aparecem como "ainda não calculada".
-- No grafo, a espessura e a cor de cada aresta acompanham o feromônio. O valor numérico de τ aparece sobre a aresta, e a melhor rota acumulada fica em laranja, com setas indicando o sentido. Passe o mouse ou clique em uma aresta para ver a distância, o feromônio e a atualização da iteração (antes, após evaporação, depósito). Quando a escala visual muda entre iterações, um aviso informa os novos limites.
+- No grafo, a espessura e a cor de cada aresta acompanham o feromônio. O valor numérico de τ aparece sobre a aresta, e a melhor rota acumulada fica em laranja, com setas indicando o sentido. Passe o mouse ou clique em uma aresta para ver a distância, o feromônio e a atualização da iteração (antes, após evaporação, depósito). A espessura é relativa ao maior τ já alcançado até a iteração exibida. Esse topo nunca diminui, então uma aresta que perdeu feromônio nunca aparece mais grossa. Quando o topo muda, um aviso informa o novo valor.
 - O controle **Iteração exibida** e as linhas da tabela do histórico permitem voltar a qualquer iteração já concluída.
 - Em **Detalhes da iteração exibida**, os painéis expansíveis mostram, para cada formiga, cada passo: vértice atual, candidatos com τ, d, w e p, vértice escolhido, retorno ao depósito e comprimento. Mostram também, para cada aresta, o feromônio anterior, após evaporação, o depósito total e o final.
 

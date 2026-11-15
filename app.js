@@ -416,7 +416,12 @@
       if (v < min) min = v;
       if (v > max) max = v;
     }
-    return { tau, min, max, n };
+    // Topo da escala visual: o maior τ já alcançado até a iteração exibida.
+    // Como ele nunca diminui, uma aresta que perdeu feromônio nunca fica mais
+    // grossa nem mais escura (a representação não sugere aumento após redução).
+    let escala = eng.config.tau0;
+    for (let k = 0; k < state.view; k += 1) escala = Math.max(escala, eng.history[k].pheromone.max);
+    return { tau, min, max, escala, n };
   }
 
   /** Melhor rota acumulada até a iteração exibida (troca só se estritamente menor). */
@@ -485,21 +490,22 @@
     const offY = (H - esc * (maxY - minY)) / 2;
     const pos = vs.map((v) => ({ x: offX + (v.x - minX) * esc, y: H - offY - (v.y - minY) * esc }));
 
-    const { tau, min, max, n } = feromonioExibido();
+    const { tau, min, max, escala, n } = feromonioExibido();
 
     // Aviso de mudança de escala visual
     const aviso = $('aviso-escala');
     const anterior = state.lastScale;
-    state.lastScale = { min, max };
-    const mudou = anterior && (Math.abs(anterior.max - max) > 1e-9 * Math.max(1, anterior.max) || Math.abs(anterior.min - min) > 1e-9 * Math.max(1, anterior.min));
+    state.lastScale = escala;
+    const mudou = anterior !== null && Math.abs(anterior - escala) > 1e-9 * Math.max(1, anterior);
     if (mudou) {
-      aviso.textContent = `A escala visual mudou: espessura e cor agora são relativas a τ entre ${fmt(min)} e ${fmt(max)} (antes: ${fmt(anterior.min)} a ${fmt(anterior.max)}).`;
+      aviso.textContent = `A escala visual mudou: a espessura máxima agora corresponde a τ = ${fmt(escala)} (antes: τ = ${fmt(anterior)}). Arestas com o mesmo τ aparecem mais finas que antes; compare pelos valores numéricos.`;
       aviso.hidden = false;
     } else {
       aviso.hidden = true;
     }
     $('lg-min').textContent = fmt(min);
     $('lg-max').textContent = fmt(max);
+    $('lg-escala').textContent = fmt(escala);
 
     // Arestas
     const gArestas = el('g');
@@ -509,7 +515,7 @@
     for (let i = 0; i < n; i += 1) {
       for (let j = i + 1; j < n; j += 1) {
         const t = tau.get(i * n + j);
-        const prop = max > 0 ? t / max : 0;
+        const prop = escala > 0 ? Math.min(1, t / escala) : 0;
         const largura = 0.8 + 5.2 * prop;
         const luz = 78 - 48 * prop;
         gArestas.appendChild(el('line', {

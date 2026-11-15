@@ -102,14 +102,15 @@
           <div class="legenda" aria-label="Legenda">
             <h3>Legenda</h3>
             <div class="leg-item"><svg width="60" height="14"><line x1="2" y1="7" x2="58" y2="7" stroke="#9db8d6" stroke-width="1.5" stroke-linecap="round"/></svg>
-              <span>pouco feromônio (τ mín = <span id="lg-min">–</span>)</span></div>
+              <span>pouco feromônio (τ próximo de 0)</span></div>
             <div class="leg-item"><svg width="60" height="14"><line x1="2" y1="7" x2="58" y2="7" stroke="#1b4f8f" stroke-width="6" stroke-linecap="round"/></svg>
-              <span>muito feromônio (τ máx = <span id="lg-max">–</span>)</span></div>
+              <span>muito feromônio (τ = <span id="lg-escala">–</span>, topo da escala)</span></div>
+            <p class="nota">Nesta iteração: τ mín = <span id="lg-min">–</span>; τ máx = <span id="lg-max">–</span>.</p>
             <div class="leg-item"><svg width="60" height="14"><line x1="2" y1="7" x2="58" y2="7" stroke="#e8590c" stroke-width="3" stroke-linecap="round"/><polygon points="32,2 42,7 32,12" fill="#e8590c"/></svg>
               melhor rota acumulada (setas mostram o sentido)</div>
             <div class="leg-item"><svg width="60" height="24"><circle cx="30" cy="12" r="10" fill="#1f2933" stroke="#e8590c" stroke-width="3"/></svg> depósito</div>
             <div class="leg-item"><svg width="60" height="24"><circle cx="30" cy="12" r="10" fill="#fff" stroke="#1f2933" stroke-width="2"/></svg> ponto de entrega</div>
-            <p class="nota">Espessura e cor das arestas são proporcionais a τ em relação ao maior valor da iteração exibida.</p>
+            <p class="nota">Espessura e cor das arestas são proporcionais a τ, em relação ao maior τ já alcançado até a iteração exibida. Esse topo nunca diminui, então uma aresta que perdeu feromônio nunca aparece mais grossa.</p>
           </div>
         </div>
       </div>
