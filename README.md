@@ -18,7 +18,7 @@ Simulador do **Ant System** para encontrar uma rota que sai do depósito, visita
 1. A página abre com um cenário de 8 vértices. Os botões **Instância 6.1 (4 vértices)** e **8 vértices** carregam os exemplos prontos.
 2. Na tabela de vértices, edite o identificador e as coordenadas x e y. **+ Adicionar vértice** cria uma linha (até 12) e **✕** remove uma (mínimo de 4).
 3. Marque na primeira coluna qual vértice é o **depósito**.
-4. Preencha os parâmetros. ρ é digitado em porcentagem. Vírgula e ponto são aceitos como separador decimal.
+4. Preencha os parâmetros. ρ é digitado em porcentagem. Vírgula e ponto são aceitos como separador decimal, mas não use separador de milhar: digite `10000`, não `10.000` (o campo Q recusa esse formato para evitar que vire 10).
 5. Campos inválidos ficam destacados em vermelho e a lista de erros aparece abaixo dos parâmetros. Enquanto houver erro, a execução fica bloqueada.
 
 **Executar.**
